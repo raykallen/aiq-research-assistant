@@ -25,8 +25,7 @@ class ArtifactQAConfig(FunctionBaseConfig, name="artifact_qa"):
     Configuration for an artifact Q&A function/endpoint.
     """
     llm_name: LLMRef = "instruct_llm"
-    rag_url: str = ""
-
+    tool_names: list[str] = []
 
 @register_function(config_type=ArtifactQAConfig)
 async def artifact_qa_fn(config: ArtifactQAConfig, aiq_builder: Builder):
@@ -43,7 +42,7 @@ async def artifact_qa_fn(config: ArtifactQAConfig, aiq_builder: Builder):
 
     # Acquire the LLM from the builder
     llm = await aiq_builder.get_llm(llm_name=config.llm_name, wrapper_type=LLMFrameworkEnum.LANGCHAIN)
-
+    tools = aiq_builder.get_tools(tool_names=config.tool_names, wrapper_type=LLMFrameworkEnum.LANGCHAIN)
     async def _artifact_qa(query_message: ArtifactQAInput) -> ArtifactQAOutput:
         """
         Run the Q&A logic for a single user question about an artifact.
@@ -69,7 +68,8 @@ async def artifact_qa_fn(config: ArtifactQAConfig, aiq_builder: Builder):
         # Only enabled when not rewrite mode or rewrite mode is "entire"
         graph_config = {
             "configurable" :{
-                "rag_url": config.rag_url,
+                "tools": tools,
+                "max_tool_calls": config.max_tool_calls,
             }
         }
 
@@ -80,13 +80,11 @@ async def artifact_qa_fn(config: ArtifactQAConfig, aiq_builder: Builder):
             """
             logger.debug(f"Writing message: {message}")
 
-        rag_answer, rag_citation, relevancy, web_answer, web_citation = await process_single_query(
+        answer, citation = await process_single_query(
             query=query_message.question,
             config=graph_config,
             writer=writer,
             collection=query_message.rag_collection,
-            llm=llm,
-            search_web=query_message.use_internet
         )
 
         gen_query = GeneratedQuery(
@@ -96,7 +94,7 @@ async def artifact_qa_fn(config: ArtifactQAConfig, aiq_builder: Builder):
         )
 
         query_message.question += "\n\n --- ADDITIONAL CONTEXT --- \n" + deduplicate_and_format_sources(
-            [rag_citation], [rag_answer], [relevancy], [web_answer], [gen_query]
+            [citation], [answer], [gen_query]
         )
 
         logger.info(f"Artifact QA Query message: {query_message}")
@@ -125,11 +123,12 @@ async def artifact_qa_fn(config: ArtifactQAConfig, aiq_builder: Builder):
                     assistant_reply="Sorry, I am not able to help answer that question. Please try again."
                 )
                 return
-            
+                
         # Only enabled when not rewrite mode or rewrite mode is "entire"
         graph_config = {
-            "configurable": {
-                "rag_url": config.rag_url,
+            "configurable" :{
+                "tools": tools,
+                "max_tool_calls": config.max_tool_calls,
             }
         }
 
@@ -140,13 +139,11 @@ async def artifact_qa_fn(config: ArtifactQAConfig, aiq_builder: Builder):
             """
             logger.debug(f"Writing message: {message}")
 
-        rag_answer, rag_citation, relevancy, web_answer, web_citation = await process_single_query(
+        answer, citation = await process_single_query(
             query=query_message.question,
             config=graph_config,
             writer=writer,
             collection=query_message.rag_collection,
-            llm=llm,
-            search_web=query_message.use_internet
         )
 
         gen_query = GeneratedQuery(
@@ -156,8 +153,9 @@ async def artifact_qa_fn(config: ArtifactQAConfig, aiq_builder: Builder):
         )
 
         query_message.question += "\n\n --- ADDITIONAL CONTEXT --- \n" + deduplicate_and_format_sources(
-            [rag_citation], [rag_answer], [relevancy], [web_answer], [gen_query]
+            [citation], [answer], [gen_query]
         )
+
 
         logger.info(f"Artifact QA Query message: {query_message}")
 

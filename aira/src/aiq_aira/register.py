@@ -30,6 +30,7 @@ from aiq.data_models.api_server import AIQChatResponseChunk
 from aiq_aira.functions import generate_summary, generate_queries, artifact_qa
 from aiq.builder.framework_enum import LLMFrameworkEnum
 from aiq.plugins.langchain import register
+from aiq_aira.tools import tavily_search, rag_search
 
 logger = logging.getLogger(__name__)
 
