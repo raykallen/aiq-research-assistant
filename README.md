@@ -56,7 +56,7 @@ Additionally, the blueprint uses these components:
 
 ## Technical Diagram 
 
-![Architecture Diagram](/docs/images/aira_reference_architecture.jpg)
+![Architecture Diagram](https://assets.ngc.nvidia.com/products/api-catalog/aiq/diagram.jpg)
 
 ## Minimum System Requirements 
 
@@ -84,11 +84,11 @@ CUDA version - 12.6 or later
 
 Use | Service(s)| Recommended GPU* 
 --- | --- | --- 
-Nemo Retriever Microservices for multi-modal document ingest | `graphic-elements`, `table-structure`, `paddle-ocr`, `nv-ingest`, `embedqa` | 2 x H100 80GB*  <br /> 1 x A100 80GB
-Reasoning Model for Report Generation and RAG Q&A Retrieval | `llama-3.3-nemotron-super-49b-v1` with a BF16 profile  | 2 x H100 80 GB* <br /> 2 x A100 80GB
+Nemo Retriever Microservices for multi-modal document ingest | `graphic-elements`, `table-structure`, `paddle-ocr`, `nv-ingest`, `embedqa` | 1 x H100 80GB*  <br /> 1 x A100 80GB
+Reasoning Model for Report Generation and RAG Q&A Retrieval | `llama-3.3-nemotron-super-49b-v1` with a FP8 profile  | 1 x H100 80 GB* <br /> 2 x A100 80GB
 Instruct Model for Report Generation | `llama-3.3-70b-instruct` | 2 x H100 80GB* <br /> 4 x A100 80GB
 --- | -- | -- 
-**Total** | Entire AI-Q Research Blueprint | 6 x H100 80GB* <br /> 7 x A100 80GB
+**Total** | Entire AI-Q Research Blueprint | 4 x H100 80GB* <br /> 7 x A100 80GB
 
 *This recommendation is based off of the configuration used to test the blueprint. For alternative configurations, view the [RAG blueprint documentation](https://github.com/NVIDIA-AI-Blueprints/rag?tab=readme-ov-file#minimum-system-requirements).
 
@@ -107,7 +107,7 @@ This blueprint can be run entirely with hosted NVIDIA NIM Microservices, see [ht
 
 - Use the [Get Started Notebook](/notebooks/get_started_nvidia_api.ipynb) to deploy the blueprint with Docker and interact with the sample web application  
 - Deploy with [Docker Compose](/docs/get-started/get-started-docker-compose.md)  
-- Customize the research assistant starting with the [Local Development Guide](/docs/get-started/local-development.md)  
+- Customize the research assistant starting with the [Local Development Guide](/docs/local-development.md)  
 
 ## License
 
