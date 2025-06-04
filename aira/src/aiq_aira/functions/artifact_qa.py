@@ -42,11 +42,12 @@ async def artifact_qa_fn(config: ArtifactQAConfig, aiq_builder: Builder):
 
     # Acquire the LLM from the builder
     llm = await aiq_builder.get_llm(llm_name=config.llm_name, wrapper_type=LLMFrameworkEnum.LANGCHAIN)
-    tools = aiq_builder.get_tools(tool_names=config.tool_names, wrapper_type=LLMFrameworkEnum.LANGCHAIN)
+    
     async def _artifact_qa(query_message: ArtifactQAInput) -> ArtifactQAOutput:
         """
         Run the Q&A logic for a single user question about an artifact.
         """
+        search_agent = aiq_builder.get_tool(fn_name="search_agent", wrapper_type=LLMFrameworkEnum.LANGCHAIN)
 
         apply_guardrail = os.getenv("AIRA_APPLY_GUARDRAIL", "false")
 
@@ -68,8 +69,7 @@ async def artifact_qa_fn(config: ArtifactQAConfig, aiq_builder: Builder):
         # Only enabled when not rewrite mode or rewrite mode is "entire"
         graph_config = {
             "configurable" :{
-                "tools": tools,
-                "max_tool_calls": config.max_tool_calls,
+                "search_agent": search_agent,
             }
         }
 
@@ -107,6 +107,7 @@ async def artifact_qa_fn(config: ArtifactQAConfig, aiq_builder: Builder):
         """
 
         apply_guardrail = os.getenv("AIRA_APPLY_GUARDRAIL", "false")
+        search_agent = aiq_builder.get_tool(fn_name="search_agent", wrapper_type=LLMFrameworkEnum.LANGCHAIN)
 
         if apply_guardrail.lower() == "true":
         
@@ -127,8 +128,7 @@ async def artifact_qa_fn(config: ArtifactQAConfig, aiq_builder: Builder):
         # Only enabled when not rewrite mode or rewrite mode is "entire"
         graph_config = {
             "configurable" :{
-                "tools": tools,
-                "max_tool_calls": config.max_tool_calls,
+                "search_agent": search_agent,
             }
         }
 

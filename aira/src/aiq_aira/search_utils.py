@@ -126,7 +126,7 @@ async def process_single_query(
     # Convert messages to string format
     messages_str = "\n".join([f"{msg.type}: {msg.content}" for msg in messages])
     response = await search_agent.ainvoke({"input_message": messages_str})
-    log_both(f"Agent search response: {response}", writer, "search_agent")
+    
     
     try:
         parsed_response = parse_json_markdown(response)
@@ -144,5 +144,7 @@ async def process_single_query(
             for citation in citations
         ])
     )
+
+    log_both(formatted_citation, writer, "search_agent")
 
     return (answer, formatted_citation)
