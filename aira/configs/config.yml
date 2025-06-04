@@ -63,7 +63,7 @@ functions:
     _type: generate_queries
 
   search_agent:
-    _type: react_agent
+    _type: search_agent
     llm_name: instruct
     verbose: true
     tool_names:
