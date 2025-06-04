@@ -28,6 +28,7 @@ from aiq.data_models.component_ref import FunctionRef
 from aiq.data_models.component_ref import LLMRef
 from aiq.data_models.function import FunctionBaseConfig
 from aiq.utils.type_converter import GlobalTypeConverter
+from langgraph.types import StreamWriter
 
 logger = logging.getLogger(__name__)
 

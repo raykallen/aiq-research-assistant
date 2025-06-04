@@ -128,7 +128,11 @@ async def process_single_query(
     response = await search_agent.ainvoke({"input_message": messages_str})
     log_both(f"Agent search response: {response}", writer, "search_agent")
     
-    parsed_response = parse_json_markdown(response)
+    try:
+        parsed_response = parse_json_markdown(response)
+    except Exception as e:
+        log_both(f"Error parsing agent response for {query}: {e}", writer, "search_agent")
+        return ("No answer found", format_citation(query=query, answer="No answer found", citations="No answer found"))
 
     answer = parsed_response.get("answer")
     citations = parsed_response.get("citation")

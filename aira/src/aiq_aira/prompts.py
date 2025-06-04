@@ -23,7 +23,7 @@ query_writer_instructions="""Generate {number_of_queries} search queries that wi
 
 # Instructions
 1. Given the report organization, determine the sections needed to answer the report topic.
-2. Create queries to write the sections. Each section should have two queries.
+2. Create queries to provide information for the sections. 
 3. Do not create queries for introduction or conclusion sections.
 4. Format your response as a JSON object with the following keys:
 - "query": The actual search query string
