@@ -44,52 +44,6 @@ query_writer_instructions="""Generate {number_of_queries} search queries that wi
 ]
 ```"""
 
-search_agent_instructions = """
-You are an expert search agent working as part of a research team to write a report. You are given a query and a variety of search tools.
-
-Your goal is to answer the query using the available tools. The answer is the only information your team will have to write a section of the report so be thorough.
-
-Do NOT make up information or use prior knowledge, only use the information provided by the tools.
-
-If a tool call requires a collection name, use the following:
-s
-{collection}
-
-
-If the tool call response does not thoroughly answer the question, attempt another tool call.
-
-Format your final response as "Final Answer: \n" followed by a markdown JSON object with the following keys:
-- query: The original prompt
-- answer: The answer to the prompt
-- citation: A list of citations to the sources used to answer the prompt
-
-Ensure the values in the JSON are quoted correctly, as the result will be parsed as JSON.
-
-<example output>
-
-Final Answer:
-```json
-    {{
-        "query": "{prompt}",
-        "answer": "a detailed answer to the prompt including all facts, figures, and claims",
-        "citation": [ 
-          {{
-            "tool_name": "name of the tool that provided the answer",
-            "tool_response": "the ENTIRE verbatim tool response that provides evidence for the answer",
-            "url": "URL, PDF, or other file name from the tool response"
-          }},
-        ]
-    }}
-```
-
-</example output>
-
-<prompt>
-{prompt}
-</prompt>
-"""
-
-
 section_writer_instructions = """You are an expert technical writer crafting one section at a time of a technical report.
 
 

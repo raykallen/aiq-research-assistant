@@ -13,92 +13,70 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import re
+import json
 
 from langchain.agents.agent import AgentOutputParser
 from langchain_core.agents import AgentAction
 from langchain_core.agents import AgentFinish
 from langchain_core.exceptions import LangChainException
+from langchain_core.utils.json import parse_json_markdown
 
 from .prompt import SYSTEM_PROMPT
 
-FINAL_ANSWER_ACTION = "Final Answer:"
-MISSING_ACTION_AFTER_THOUGHT_ERROR_MESSAGE = "Invalid Format: Missing 'Action:' after 'Thought:'"
-MISSING_ACTION_INPUT_AFTER_ACTION_ERROR_MESSAGE = "Invalid Format: Missing 'Action Input:' after 'Action:'"
-FINAL_ANSWER_AND_PARSABLE_ACTION_ERROR_MESSAGE = ("Parsing LLM output produced both a final answer and a parse-able "
-                                                  "action:")
+MISSING_ACTION_OR_FINAL_ANSWER_ERROR_MESSAGE = "Invalid Format: The JSON response must contain either 'action' or 'final_answer'."
+MISSING_ACTION_INPUT_ERROR_MESSAGE = "Invalid Format: The JSON response for an action must contain 'action_input'."
+ACTION_AND_FINAL_ANSWER_ERROR_MESSAGE = "Invalid Format: The JSON response cannot contain both 'action' and 'final_answer'."
 
 
 class ReActOutputParserException(ValueError, LangChainException):
 
     def __init__(self,
                  observation=None,
-                 missing_action=False,
+                 missing_action_or_final_answer=False,
                  missing_action_input=False,
-                 final_answer_and_action=False):
+                 action_and_final_answer=False):
+        super().__init__(observation)
         self.observation = observation
-        self.missing_action = missing_action
+        self.missing_action_or_final_answer = missing_action_or_final_answer
         self.missing_action_input = missing_action_input
-        self.final_answer_and_action = final_answer_and_action
+        self.action_and_final_answer = action_and_final_answer
 
 
 class ReActOutputParser(AgentOutputParser):
-    """Parses ReAct-style LLM calls that have a single tool input.
-
-    Expects output to be in one of two formats.
-
-    If the output signals that an action should be taken,
-    should be in the below format. This will result in an AgentAction
-    being returned.
-
-    ```
-    Thought: agent thought here
-    Action: search
-    Action Input: what is the temperature in SF?
-    Observation: Waiting for the tool response...
-    ```
-
-    If the output signals that a final answer should be given,
-    should be in the below format. This will result in an AgentFinish
-    being returned.
-
-    ```
-    Thought: agent thought here
-    Final Answer: The temperature is 100 degrees
-    ```
-
-    """
+    """Parses ReAct-style LLM calls that are in JSON format."""
 
     def get_format_instructions(self) -> str:
         return SYSTEM_PROMPT
 
     def parse(self, text: str) -> AgentAction | AgentFinish:
-        includes_answer = FINAL_ANSWER_ACTION in text
-        regex = r"Action\s*\d*\s*:[\s]*(.*?)\s*Action\s*\d*\s*Input\s*\d*\s*:[\s]*(.*?)(?=\s*[\n|\s]\s*Observation\b|$)"
-        action_match = re.search(regex, text, re.DOTALL)
-        if action_match:
-            if includes_answer:
-                raise ReActOutputParserException(
-                    final_answer_and_action=True,
-                    observation=f"{FINAL_ANSWER_AND_PARSABLE_ACTION_ERROR_MESSAGE}: {text}")
-            action = action_match.group(1).strip()
-            action_input = action_match.group(2)
-            tool_input = action_input.strip(" ")
-            tool_input = tool_input.strip('"')
+        try:
+            response = parse_json_markdown(text)
+        except json.JSONDecodeError as exc:
+            raise ReActOutputParserException(f"Could not parse LLM output: `{text}`") from exc
 
-            return AgentAction(action, tool_input, text)
+        has_action = "action" in response
+        has_final_answer = "final_answer" in response
 
-        if includes_answer:
-            return AgentFinish({"output": text.split(FINAL_ANSWER_ACTION)[-1].strip()}, text)
+        if has_action and has_final_answer:
+            raise ReActOutputParserException(observation=ACTION_AND_FINAL_ANSWER_ERROR_MESSAGE,
+                                             action_and_final_answer=True)
 
-        if not re.search(r"Action\s*\d*\s*:[\s]*(.*?)", text, re.DOTALL):
-            raise ReActOutputParserException(observation=MISSING_ACTION_AFTER_THOUGHT_ERROR_MESSAGE,
-                                             missing_action=True)
-        if not re.search(r"[\s]*Action\s*\d*\s*Input\s*\d*\s*:[\s]*(.*)", text, re.DOTALL):
-            raise ReActOutputParserException(observation=MISSING_ACTION_INPUT_AFTER_ACTION_ERROR_MESSAGE,
-                                             missing_action_input=True)
-        raise ReActOutputParserException(f"Could not parse LLM output: `{text}`")
+        if has_action:
+            if "action_input" not in response:
+                raise ReActOutputParserException(observation=MISSING_ACTION_INPUT_ERROR_MESSAGE,
+                                                 missing_action_input=True)
+
+            action = response["action"]
+            action_input = response["action_input"]
+
+            return AgentAction(action, action_input, text)
+
+        if has_final_answer:
+            return AgentFinish({"output": response["final_answer"]}, text)
+
+        raise ReActOutputParserException(observation=MISSING_ACTION_OR_FINAL_ANSWER_ERROR_MESSAGE,
+                                         missing_action_or_final_answer=True)
 
     @property
     def _type(self) -> str:
-        return "react-input"
+        return "react-json-input"

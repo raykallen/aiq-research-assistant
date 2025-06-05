@@ -40,8 +40,8 @@ from aiq.agent.base import TOOL_NOT_FOUND_ERROR_MESSAGE
 from aiq.agent.base import TOOL_RESPONSE_LOG_MESSAGE
 from aiq.agent.base import AgentDecision
 from aiq.agent.dual_node import DualNodeAgent
-from aiq.agent.react_agent.output_parser import ReActOutputParser
-from aiq.agent.react_agent.output_parser import ReActOutputParserException
+from aiq_aira.search_agent.output_parser import ReActOutputParser
+from aiq_aira.search_agent.output_parser import ReActOutputParserException
 
 from langchain_core.utils.json import parse_json_markdown, parse_partial_json
 
@@ -89,7 +89,7 @@ class SearchAgentGraph(DualNodeAgent):
                          f"{INPUT_SCHEMA_MESSAGE.format(schema=tools[-1].input_schema.model_fields)}")
         prompt = prompt.partial(tools=tool_names_and_descriptions, tool_names=tool_names)
         # construct the ReAct Agent
-        llm = llm.bind(stop=["Observation:"])
+        llm = llm.bind()
         self.agent = prompt | llm
         self.tools_dict = {tool.name: tool for tool in tools}
         logger.debug("%s Initialized Search ReAct Agent Graph", AGENT_LOG_PREFIX)
@@ -170,7 +170,7 @@ class SearchAgentGraph(DualNodeAgent):
                         logger.debug("%s The agent has finished, and has the final answer", AGENT_LOG_PREFIX)
                         # this is where we handle the final output of the Agent, we can clean-up/format/postprocess here
                         # the final answer goes in the "messages" state channel
-                        state.messages += [AIMessage(content=final_answer)]
+                        state.messages += [AIMessage(content=json.dumps(final_answer))]
                     else:
                         # the agent wants to call a tool, ensure the thoughts are preserved for the next agentic cycle
                         agent_output.log = output_message.content
@@ -253,15 +253,18 @@ class SearchAgentGraph(DualNodeAgent):
                          agent_thoughts.tool_input)
 
             # Run the tool. Try to use structured input, if possible.
+            tool_input = agent_thoughts.tool_input
             try:
-                tool_input_str = agent_thoughts.tool_input.strip().replace("'", '"')
-                print(f"tool_input_str: {tool_input_str}")
-                
-                #tool_input_dict = parse_json_markdown(tool_input_str) if tool_input_str != 'None' else tool_input_str
-                #tool_input_dict = parse_partial_json(tool_input_str) if tool_input_str != 'None' else tool_input_str
-                tool_input_dict = json.loads(tool_input_str) if tool_input_str != 'None' else tool_input_str
-                logger.debug("%s Successfully parsed structured tool input from Action Input", AGENT_LOG_PREFIX)
-                tool_response = await requested_tool.ainvoke(tool_input_dict,
+                invokable_input = tool_input
+                # If tool_input is a string that is valid JSON, parse it.
+                if isinstance(tool_input, str):
+                    try:
+                        invokable_input = json.loads(tool_input)
+                    except json.JSONDecodeError:
+                        # Not a JSON string, pass as is.
+                        pass
+
+                tool_response = await requested_tool.ainvoke(invokable_input,
                                                              config=RunnableConfig(callbacks=self.callbacks))
                 if self.detailed_logs:
                     # The tool response can be very large, so we log only the first 1000 characters
@@ -269,23 +272,9 @@ class SearchAgentGraph(DualNodeAgent):
                     tool_response_str = tool_response_str[:1000] + "..." if len(
                         tool_response_str) > 1000 else tool_response_str
                     tool_response_log_message = TOOL_RESPONSE_LOG_MESSAGE % (
-                        requested_tool.name, tool_input_str, tool_response_str)
+                        requested_tool.name, str(invokable_input), tool_response_str)
                     logger.info(tool_response_log_message)
-            except JSONDecodeError as ex:
-                logger.warning(
-                    "%s Unable to parse structured tool input from Action Input. Using Action Input as is."
-                    "\nParsing error: %s",
-                    AGENT_LOG_PREFIX,
-                    ex,
-                    exc_info=True)
-                tool_input_str = agent_thoughts.tool_input
-                try:
-                    tool_response = await requested_tool.ainvoke(tool_input_str,
-                                                                 config=RunnableConfig(callbacks=self.callbacks))
-                except Exception as ex:
-                    logger.debug(f"Failed to call tool {requested_tool.name}: {ex}, passing failure as tool response")
-                    tool_response = f"Failed to call tool {requested_tool.name}: {ex}"
-                    
+
             except Exception as ex:
                 logger.debug(f"Failed to call tool {requested_tool.name}: {ex}, passing failure as tool response")
                 tool_response = f"Failed to call tool {requested_tool.name}: {ex}"

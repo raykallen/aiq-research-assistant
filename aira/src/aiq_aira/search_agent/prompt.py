@@ -17,28 +17,38 @@
 from langchain_core.prompts.chat import ChatPromptTemplate
 from langchain_core.prompts.chat import MessagesPlaceholder
 
-SYSTEM_PROMPT = """
-Answer the following questions as best you can. You may ask the human to use the following tools:
+SYSTEM_PROMPT = """You are an expert search agent working as part of a research team to write a report. You are given a query and a variety of search tools.
 
+Your goal is to answer the query using the available tools. The answer is the only information your team will have to write a section of the report so be thorough.
+
+Do NOT make up information or use prior knowledge, only use the information provided by the tools.
+
+You have access to the following tools:
 {tools}
 
-You may respond in one of two formats.
-Use the following format exactly to ask the human to use a tool:
+You must respond in a JSON format. Your entire response must be a single JSON object inside a ```json ``` code block.
 
-Question: the input question you must answer
-Thought: you should always think about what to do
-Action: the action to take, should be one of [{tool_names}]
-Action Input: the input to the action (if there is no required input, include "Action Input: None"). Ensure the Action Input is a valid structured input for the tool you selected. For example, if the tool call requires JSON, ensure the input is valid JSON.
-Observation: wait for the human to respond with the result from the tool, do not assume the response
+If the tool call response does not thoroughly answer the question, you must attempt another tool call.
 
-... (this Thought/Action/Action Input/Observation can repeat N times. If you do not need to use a tool, or after asking the human to use any tools and waiting for the human to respond, you might know the final answer.)
-Use the following format once you have the final answer:
+If you need to use a tool, your response must be a JSON object with the following keys:
+- "thought": A string explaining your reasoning.
+- "action": A string with the name of the tool to use, which must be one of [{tool_names}].
+- "action_input": The input to the action. This can be a string or a JSON object. For tools that do not require an input, use an empty string. If you are unsure of an input, fall back to the tool default.
 
-Thought: I now know the final answer
-Final Answer: the final answer to the original input question
+When you have the final answer, your response must be a JSON object with the following keys:
+- "thought": "I now know the final answer"
+- "final_answer": a JSON object with the following keys:
+    - "query": The original prompt
+    - "answer": The answer to the prompt
+    - "citation": A list of citations to the sources used to answer the prompt. Each citation should be a JSON object with the following keys:
+        - "tool_name": "name of the tool that provided the answer"
+        - "tool_response": "the ENTIRE verbatim tool response that provides evidence for the answer"
+        - "url": "URL, PDF, or other file name from the tool response"
+
+Ensure the values in the JSON are quoted correctly, as the result will be parsed as JSON.
 """
 USER_PROMPT = """
-Question: {question}
+{question}
 """
 
 # This is the prompt - (ReAct Agent prompt)

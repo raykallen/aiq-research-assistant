@@ -6,9 +6,9 @@ import logging
 from langchain_core.utils.json import parse_json_markdown
 from aiq_aira.schema import GeneratedQuery
 from aiq_aira.utils import format_citation, log_both
-from aiq_aira.prompts import search_agent_instructions
 from langchain_core.messages import HumanMessage, _escape_markdown
 import html
+import json
 
 logger = logging.getLogger(__name__)
 
@@ -88,13 +88,13 @@ def deduplicate_and_format_sources(
     ):
         source_elem = ET.SubElement(root, "source")
         query_elem = ET.SubElement(source_elem, "query")
-        query_elem.text = q_json.query
+        query_elem.text = str(q_json.query)
         answer_elem = ET.SubElement(source_elem, "answer")
         section_elem = ET.SubElement(source_elem, "section")
-        section_elem.text = q_json.report_section
-        answer_elem.text = gen_ans
+        section_elem.text = str(q_json.report_section)
+        answer_elem.text = str(gen_ans)
         citation_elem = ET.SubElement(source_elem, "citation")
-        citation_elem.text = src
+        citation_elem.text = str(src)
 
         
     return ET.tostring(root, encoding="unicode")
@@ -114,18 +114,8 @@ async def process_single_query(
 
     search_agent = config["configurable"].get("search_agent")
     log_both(f"Agent searching for: {query}", writer, "search_agent")
-    messages = [
-        HumanMessage(
-            content=search_agent_instructions.format(
-                prompt=query, 
-                collection=collection
-            )
-        ),
-    ]
-
-    # Convert messages to string format
-    messages_str = "\n".join([f"{msg.type}: {msg.content}" for msg in messages])
-    response = await search_agent.ainvoke({"input_message": messages_str})
+    add_collection_to_prompt = f"{query} \n If the tool call requires a collection, use the following collection: {collection}"
+    response = await search_agent.ainvoke({"input_message": add_collection_to_prompt})
     
     
     try:
