@@ -50,8 +50,6 @@ You should have the [RAG Blueprint](https://github.com/NVIDIA-AI-Blueprints/rag)
 
 1. When the compose services are ready, you can access the frontend on the IP address, eg. ``http://<ip_addr>:3001``. 
 
-   * If ``ERR_CONNECTION_REFUSED``, restart the frontend container: **Environment** > **Compose** > **aira-frontend** > **restart**.
-
 1. You can now interact with the deep research agent through its browser interface.
 
 ## Customization
@@ -64,7 +62,7 @@ You can further customize the blueprint as follows:
 * Adjust default report organization prompts
 * And more!
 
-To customize this blueprint, adjust the ``configs`` section under ``deploy/workbench/docker-compose.yaml`` in a code editor and save your changes. When restarting the compose, any configuration changes will take effect and auto-populate under the ``aira`` backend directory. 
+To customize this blueprint, adjust the ``configs`` section under ``deploy/workbench/docker-compose.yaml`` in a code editor and save your changes. When restarting the compose, any configuration changes you make will take effect. 
 
 ## License
 
