@@ -25,7 +25,7 @@ The main research agent is written in LangGraph and managed using NVIDIA Agent I
 
 ## Get Started
 
-Ensure you have satisfied the prerequisites for this Blueprint ([details](../README.md)). 
+Ensure you meet the prerequisites for this Blueprint ([details](../README.md)). 
 
 You should have the [RAG Blueprint](https://github.com/NVIDIA-AI-Blueprints/rag) up and running already. This deep researcher will wrap around your RAG pipeline. 
 
