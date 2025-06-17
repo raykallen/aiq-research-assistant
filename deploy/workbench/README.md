@@ -1,4 +1,4 @@
-# Quickstart for NVIDIA AI Workbench 
+# Get Started with NVIDIA AI Workbench 
 
 The AI-Q NVIDIA Research Assistant Blueprint allows you to create a deep research assistant that can run on-premise, allowing anyone to create detailed research reports using on-premise data and web search. 
 
