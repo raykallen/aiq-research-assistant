@@ -4,10 +4,6 @@
 
 The AI-Q NVIDIA Research Assistant blueprint allows you to create a deep research assistant that can run on-premise, allowing anyone to create detailed research reports using on-premise data and web search. 
 
-| :exclamation: Important |
-| :-----------------------|
-| Users running this blueprint with [NVIDIA AI Workbench](https://www.nvidia.com/en-us/deep-learning-ai/solutions/data-science/workbench/) should use to the quickstart section [here](deploy/workbench#get-started)! |
-
 ## Table of Contents
 
 - [Key Features](#key-features)
@@ -75,6 +71,7 @@ Ubuntu 22.04
 ### Deploy Options 
 
 [Docker Compose](/docs/get-started/get-started-docker-compose.md)  
+[NVIDIA AI Workbench](deploy/workbench/README.md)
 
 ### Drivers
 
