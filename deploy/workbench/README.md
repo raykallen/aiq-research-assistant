@@ -15,12 +15,12 @@ The AI-Q NVIDIA Research Assistant Blueprint allows you to create a deep researc
 
 The main research agent is written in LangGraph and managed using NVIDIA Agent Intelligence Toolkit (AIQ). The research agent provides a unique deep research capability with these features:
 
-- **Deep Research**: Given a report topic and desired report structure, an agent will do the following: 
-1. Create a report plan
-2. Search data sources for answers
-3. Write a report
-4. Reflect on gaps in the report for further queries
-5. Complete a report with a list of sources
+- **Deep Research**: Given a report topic and desired report structure, an agent will do the following:
+  1. Create a report plan
+  2. Search data sources for answers
+  3. Write a report
+  4. Reflect on gaps in the report for further queries
+  5. Complete a report with a list of sources
 
 - **Parallel Search**: During the research phase, multiple research questions are searched in parallel. For each query, the RAG service is consulted and an LLM-as-a-judge is used to check the relevancy of the results. If more information is needed, a fallback web search is performed. This search approach ensures internal documents are given preference over generic web results while maintaining accuracy. Performing query search in parallel allows for many data sources to be consulted in an efficient manner.
 - **Human-in-the-loop**: Human feedback on the report plan, interactive report edits, and Q&A with the final report.
