@@ -3,7 +3,7 @@
 The AI-Q NVIDIA Research Assistant Blueprint allows you to create a deep research assistant that can run on-premise, allowing anyone to create detailed research reports using on-premise data and web search. 
 
 > **Note**
-> This app runs in [NVIDIA AI Workbench](https://docs.nvidia.com/ai-workbench/user-guide/latest/overview/introduction.html). It is a free, lightweight developer platform that you can run on your own systems to get up and running with complex AI applications and workloads quickly. 
+> This Blueprint runs in [NVIDIA AI Workbench](https://docs.nvidia.com/ai-workbench/user-guide/latest/overview/introduction.html). It is a free, lightweight developer platform that you can run on your own systems to get up and running with complex AI applications and workloads quickly. 
 
 > You may want to [**fork**](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/fork-a-repo#forking-a-repository) this repository into your own account before proceeding. Otherwise you won't be able to fully push any changes you make because this NVIDIA-owned repository is **read-only**.
 
@@ -12,8 +12,6 @@ The AI-Q NVIDIA Research Assistant Blueprint allows you to create a deep researc
 *Other Resources*: [:arrow_down: Download AI Workbench](https://www.nvidia.com/en-us/deep-learning-ai/solutions/data-science/workbench/) | [:book: User Guide](https://docs.nvidia.com/ai-workbench/) |[:open_file_folder: Other Projects](https://docs.nvidia.com/ai-workbench/user-guide/latest/quickstart/example-projects.html) | :rotating_light: User Forum (Coming Soon)
 
 ## Project Overview
-
-The AI-Q NVIDIA Research Assistant blueprint allows you to create a deep research assistant that can run on-premise, allowing anyone to create detailed research reports using on-premise data and web search. 
 
 The main research agent is written in LangGraph and managed using NVIDIA Agent Intelligence Toolkit (AIQ). The research agent provides a unique deep research capability with these features:
 
