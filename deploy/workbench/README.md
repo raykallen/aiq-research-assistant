@@ -52,7 +52,7 @@ Before you begin, run the  [RAG Blueprint](https://github.com/NVIDIA-AI-Blueprin
 
 ## Customization
 
-You can further customize the blueprint as follows:
+There are many ways you can customize the blueprint, including the following:
 
 * Use on-prem NIMs vs. cloud-hosted models
 * Swap models names or endpoints
