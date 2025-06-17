@@ -82,8 +82,6 @@ execution:
           description: ""
         - variable: NVIDIA_API_KEY
           description: NVIDIA API Key from build.nvidia.com or NGC (starts with "nvapi-")
-        - variable: RAG_INGEST_URL
-          description: Location of your RAG Blueprint, eg. 10.123.45.678
     mounts:
         - type: project
           target: /project/
