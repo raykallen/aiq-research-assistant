@@ -66,7 +66,9 @@ There are many ways you can customize the blueprint, including the following:
 * Adjust default report organization prompts
 * And more!
 
-To customize this blueprint, adjust the ``configs`` section under ``deploy/workbench/docker-compose.yaml`` in a code editor and save your changes. When restarting the compose, any configuration changes you make will take effect. 
+To customize this blueprint, adjust the config files under ``aira/configs/`` in a code editor and save your changes. Note that ``config.yml`` refers to local deployment configurations and ``hosted-config.yml`` refers to deployments using NVIDIA-hosted model endpoints. 
+
+When restarting the compose, any configuration changes you make will take effect. 
 
 ## License
 
