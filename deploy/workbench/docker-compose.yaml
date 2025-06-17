@@ -85,6 +85,8 @@ services:
       - "3001"
     networks:
       - nvidia-rag
+    depends_on:
+      - aira-nginx
     environment:
       NVWB_TRIM_PREFIX: true
       INFERENCE_ORIGIN: ${INFERENCE_ORIGIN:-http://aira-nginx:8051}
