@@ -235,8 +235,7 @@ services:
         target: /app/configs/config.yml
     profiles: ["aira-gpu"]
 
-  aira-nginx-no-gpu: &aira-nginx-no-gpu
-    hostname: aira-nginx
+  aira-nginx: 
     image: nginx:latest
     container_name: aira-nginx
     ports:
@@ -250,19 +249,11 @@ services:
       - AIRA_BASE_URL=${AIRA_BASE_URL:-http://aira-backend:3838}
     volumes:
       - ./nginx.conf.template:/etc/nginx/templates/nginx.conf.template
-    depends_on:
-      - aira-backend-no-gpu
     networks:
       - nvidia-rag
-    profiles: ["aira-no-gpu"]
-
-  aira-nginx-gpu: 
-    <<: *aira-nginx-no-gpu
-    depends_on:
-      - aira-backend-gpu
-    profiles: ["aira-gpu"]
+    profiles: ["aira-no-gpu", "aira-gpu"]
     
-  aira-frontend-no-gpu: 
+  aira-frontend: 
     container_name: aira-frontend
     image: nvcr.io/nvidia/blueprint/aira-frontend:v1.0.0
     ports:
