@@ -55,7 +55,7 @@ Before you begin, run the  [RAG Blueprint](https://github.com/NVIDIA-AI-Blueprin
 You can further customize the blueprint as follows:
 
 * Use on-prem NIMs vs. cloud-hosted models
-* Swap models names/endpoints
+* Swap models names or endpoints
 * Custom endpoint routes
 * Adjust default report organization prompts
 * And more!
