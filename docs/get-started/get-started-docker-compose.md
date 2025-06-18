@@ -76,7 +76,7 @@ export MODEL_DIRECTORY=~/.cache/model-cache
 Before deploying the AI-Q Research Assistant, deploy RAG by following [these instructions](https://github.com/NVIDIA-AI-Blueprints/rag/blob/main/docs/quickstart.md#start-using-on-prem-models).
 
 ```bash
-git clone https://github.com/NVIDIA-AI-Blueprints/rag.git -b v2.1.0
+git clone https://github.com/NVIDIA-AI-Blueprints/rag.git
 ```
 
 Deploy the RAG NVIDIA NIM microservices, including the LLM. *This step can take up to 45 minutes*.
@@ -214,7 +214,7 @@ docker run \
   -e PYTHONUNBUFFERED=1 \
   -v /tmp:/tmp-data \
   --network nvidia-rag \
-  nvcr.io/nvidia/blueprint/aira-load-files:v1.0.0
+  nvcr.io/nvidia/blueprint/aira-load-files:v1.1.0
 ```
 
 This command will populate the default collections with sample documents. Note that this process can take up to 60 minutes to complete, during which time manual uploads from the frontend may not work properly.
