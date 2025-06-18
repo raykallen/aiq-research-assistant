@@ -9,7 +9,7 @@ The AI-Q NVIDIA Research Assistant Blueprint allows you to create a deep researc
 
 *Navigating the README*: [Project Overview](#project-overview) | [Get Started](#get-started) | [Customize](#customization) | [License](#license)
 
-*Other Resources*: [:arrow_down: Download AI Workbench](https://www.nvidia.com/en-us/deep-learning-ai/solutions/data-science/workbench/) | [:book: User Guide](https://docs.nvidia.com/ai-workbench/) |[:open_file_folder: Other Projects](https://docs.nvidia.com/ai-workbench/user-guide/latest/quickstart/example-projects.html) | :rotating_light: User Forum (Coming Soon)
+*Other Resources*: [:arrow_down: Download AI Workbench](https://www.nvidia.com/en-us/deep-learning-ai/solutions/data-science/workbench/) | [:book: User Guide](https://docs.nvidia.com/ai-workbench/) |[:open_file_folder: Other Projects](https://docs.nvidia.com/ai-workbench/user-guide/latest/quickstart/example-projects.html) | [:rotating_light: Developer Forum](https://forums.developer.nvidia.com/t/support-workbench-example-blueprint-ai-q-research-assistant/336538)
 
 ## Project Overview
 
@@ -52,7 +52,9 @@ Before you begin, run the  [RAG Blueprint](https://github.com/NVIDIA-AI-Blueprin
 
 1. On the **Project Dashboard**, select **Start** under the **Compose** section. The compose services may take several minutes to pull and build.
 
-1. When the compose services are ready, you can access the frontend on the IP address, eg. ``http://<ip_addr>:3001``. 
+1. When the compose services are ready, you can access the frontend on the IP address, eg. ``http://<ip_addr>:3001``.
+
+   * If ``ERR_CONNECTION_REFUSED``, try restarting the frontend container: **Environment** > **Compose** > **aira-frontend** > **restart**.
 
 1. You can now interact with the deep research agent through its browser interface.
 
