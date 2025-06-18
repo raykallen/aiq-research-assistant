@@ -27,11 +27,11 @@ The main research agent is written in LangGraph and managed using NVIDIA Agent I
 - **Data Sources**: Integration with the NVIDIA RAG blueprint to search multimodal documents with text, charts, and tables. Optional web search through Tavily.
 - **Demo Web Application**: Frontend web application showcasing end-to-end use of the AI-Q Research Assistant.
 
-[Read More](../README.md)
+[Read More](../../README.md)
 
 ## Start Using the Deep Research Agent With NVIDIA AI Workbench
 
-Ensure you meet the prerequisites for this Blueprint ([details](../README.md)). 
+Ensure you meet the prerequisites for this Blueprint ([details](../../README.md)). 
 
 Before you begin, run the  [RAG Blueprint](https://github.com/NVIDIA-AI-Blueprints/rag). This deep researcher will wrap around your RAG pipeline. 
 
