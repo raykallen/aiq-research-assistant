@@ -64,9 +64,7 @@ There are many ways you can customize the blueprint, including the following:
 
 * Use on-prem NIMs vs. cloud-hosted models
 * Swap models names or endpoints
-* Custom endpoint routes
 * Adjust default report organization prompts
-* And more!
 
 To customize this blueprint, adjust the config files under ``aira/configs/`` in a code editor and save your changes. Note that ``config.yml`` refers to local deployment configurations and ``hosted-config.yml`` refers to deployments using NVIDIA-hosted model endpoints. 
 
