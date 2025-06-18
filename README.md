@@ -70,9 +70,9 @@ Ubuntu 22.04
 
 ### Deploy Options 
 
-[Docker Compose](/docs/get-started/get-started-docker-compose.md)  
-[Kubernetes with Helm](/docs/get-started/get-started-helm.md)
-[NVIDIA AI Workbench](/deploy/workbench/README.md#start-using-the-deep-research-agent-with-nvidia-ai-workbench)
+[Docker Compose](/docs/get-started/get-started-docker-compose.md)    
+[Kubernetes with Helm](/docs/get-started/get-started-helm.md)  
+[NVIDIA AI Workbench](/deploy/workbench/README.md#start-using-the-deep-research-agent-with-nvidia-ai-workbench)  
 
 ### Drivers
 
