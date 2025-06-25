@@ -79,6 +79,13 @@ Before deploying the AI-Q Research Assistant, deploy RAG by following [these ins
 git clone https://github.com/NVIDIA-AI-Blueprints/rag.git
 ```
 
+Open the file `rag/deploy/compose/.env` and confirm that all of the values in the section `# ==== Endpoints for using cloud NIMs ===` are commented out. Then source this file:
+
+
+```bash
+source rag/deploy/compose/.env
+```
+
 Deploy the RAG NVIDIA NIM microservices, including the LLM. *This step can take up to 45 minutes*.
 
 ```bash
