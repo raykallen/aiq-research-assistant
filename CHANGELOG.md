@@ -1,7 +1,7 @@
 # Change Log
 
 Release v1.1.0 
-- Adds support for Helm
+- Tested for compatability with RAG 2.2.0 release and B200
 - Adds support for NVIDIA Workbench
 
 Release v1.0.0
