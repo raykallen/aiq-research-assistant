@@ -1,5 +1,9 @@
 # Change Log
 
+Release v1.1.0 
+- Tested for compatability with RAG 2.2.0 release and B200
+- Adds support for NVIDIA Workbench
+
 Release v1.0.0
 
 Initial release of the NVIDIA AI-Q Research Assistant Blueprint featuring:
