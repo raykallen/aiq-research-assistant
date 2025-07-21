@@ -23,6 +23,10 @@ general:
         method: GET
         description: Get the default collections
         function_name: default_collections
+      - path: /search_agent
+        method: POST
+        description: Search with provided tools
+        function_name: search_agent
 
 llms:
   # The inst_llm is used for Q&A and report writing and should be an instruct model.
@@ -51,6 +55,14 @@ llms:
 
 functions:
 
+  mcp_time:
+    _type: mcp_client
+    server:
+      transport: stdio
+      command: "python"
+      args: ["-m", "mcp_server_time", "--local-timezone=America/Los_Angeles"]
+
+
   rag_search:
     _type: rag_search
     rag_url: http://rag-server:8081/v1
@@ -67,8 +79,7 @@ functions:
     llm_name: instruct
     verbose: true
     tool_names:
-      - rag_search
-      - tavily_search
+      - mcp_time
 
   generate_summary:
     _type: generate_summaries

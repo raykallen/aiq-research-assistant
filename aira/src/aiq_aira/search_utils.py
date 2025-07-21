@@ -5,10 +5,11 @@ from langgraph.types import StreamWriter
 import logging
 from langchain_core.utils.json import parse_json_markdown
 from aiq_aira.schema import GeneratedQuery
-from aiq_aira.utils import format_citation, log_both
-from langchain_core.messages import HumanMessage, _escape_markdown
+from aiq_aira.utils import format_citation, log_both, _escape_markdown
+from langchain_core.messages import HumanMessage
 import html
 import json
+from langchain_openai import ChatOpenAI
 
 logger = logging.getLogger(__name__)
 

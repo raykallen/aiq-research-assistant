@@ -23,6 +23,7 @@ from pydantic import BaseModel
 from aiq.builder.builder import Builder
 from aiq.cli.register_workflow import register_function
 from aiq.data_models.component_ref import LLMRef
+from aiq.tool.mcp import mcp_client
 from aiq.data_models.component_ref import FunctionRef
 from aiq.data_models.function import FunctionBaseConfig
 from aiq.builder.function_info import FunctionInfo

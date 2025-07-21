@@ -10,6 +10,7 @@ root = ".."
 name = "aiq_aira"
 dynamic = ["version"]
 dependencies = [
+  "mcp-server-time",
   "aiqtoolkit>=1.2.0a1",
   "aiqtoolkit-langchain>=1.2.0a1",
   "aiohappyeyeballs==2.4.4",
